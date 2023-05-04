@@ -61,6 +61,7 @@
     width="340"
     height=${height}
     frameborder="0"
+    sandbox
     src="${fullUrl}"
 ></iframe>
 `.trim();
