@@ -70,8 +70,10 @@
 
 <div class="root">
     <section>
-        <h3>User ID</h3>
-        <input type="text" bind:value={userId} />
+        <label>
+            <h3>User ID</h3>
+            <input type="text" bind:value={userId} />
+        </label>
     </section>
 
     <section>
