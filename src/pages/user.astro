@@ -4,7 +4,7 @@ import { getUser, getUserAvatar, getUserBanner } from "../discord_api";
 const id = Astro.url.searchParams.get("id");
 if (!id) return new Response("Missing id parameter", { status: 400 });
 
-const user = await getUser(Astro.request, id).catch(() => null);
+const user = await getUser(Astro.request, id).catch(e => {});
 if (!user) return new Response("User not found", { status: 404 });
 
 const theme = Astro.url.searchParams.get("theme");
