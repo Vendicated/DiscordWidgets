@@ -111,7 +111,9 @@
                     />
                 </svg>
             </button>
-            <pre><code>{code}</code></pre>
+            <div class="code-wrapper">
+                <code>{code}</code>
+            </div>
         </div>
     </section>
 </div>
@@ -139,13 +141,15 @@
 
     .code {
         position: relative;
-    }
-
-    pre {
         border: 1px solid black;
         padding: 0.5em;
+        max-width: 80vw;
+    }
+
+    .code-wrapper {
+        overflow-wrap: anywhere;
+        display: inline-block;
         white-space: pre-wrap;
-        overflow-x: scroll;
     }
 
     button {
