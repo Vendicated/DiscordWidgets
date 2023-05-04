@@ -57,7 +57,7 @@
 
     $: code = `
 <iframe
-    title="User Embed"
+    title="Discord user embed"
     width="340"
     height=${height}
     frameborder="0"
