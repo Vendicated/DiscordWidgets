@@ -25,7 +25,7 @@ export async function sendRequest<T extends object = any>(req: Request, route: s
     return res.json() as Promise<T>;
 }
 
-interface User {
+export interface User {
     id: string;
     username: string;
     avatar: string;
@@ -43,10 +43,10 @@ export const getUser = (req: Request, id: string) => sendRequest<User>(req, `/us
 
 const getExt = (asset: string) => asset.startsWith("a_") ? "gif" : "webp";
 
-export function getUserAvatar(user: User) {
+export function getUserAvatar(user: User, format?: "webp" | "png") {
     if (!user.avatar) return `${CDN_BASE}/embed/avatars/${Number(user.discriminator) % 6}.png`;
 
-    return `${CDN_BASE}/avatars/${user.id}/${user.avatar}.${getExt(user.avatar)}?size=256`;
+    return `${CDN_BASE}/avatars/${user.id}/${user.avatar}.${format ?? getExt(user.avatar)}?size=256`;
 }
 
 export function getUserBanner(user: User) {

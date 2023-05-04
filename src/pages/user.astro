@@ -1,5 +1,6 @@
 ---
 import { getUser, getUserAvatar, getUserBanner } from "../discord_api";
+import { getPfpColor, numToHexColor } from "../utils";
 
 const id = Astro.url.searchParams.get("id");
 if (!id) return new Response("Missing id parameter", { status: 400 });
@@ -18,7 +19,7 @@ const bannerUrl = getUserBanner(user);
 
 const bg =
     user.accent_color != null
-        ? `#${user.accent_color.toString(16)}`
+        ? numToHexColor(user.accent_color)
         : user.banner_color || "var(--background)";
 ---
 

@@ -2,6 +2,7 @@
     "extends": "astro/tsconfigs/strict",
     "include": ["src/**/*"],
     "compilerOptions": {
-        "types": ["@cloudflare/workers-types"]
+        "types": ["@cloudflare/workers-types"],
+        "allowJs": true
     }
 }
