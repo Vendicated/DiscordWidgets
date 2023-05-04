@@ -4,15 +4,14 @@ import { getUser, getUserAvatar, getUserBanner } from "../discord_api";
 const id = Astro.url.searchParams.get("id");
 if (!id) return new Response("Missing id parameter", { status: 400 });
 
+const user = await getUser(Astro.request, id).catch(() => null);
+if (!user) return new Response("User not found", { status: 404 });
+
 const theme = Astro.url.searchParams.get("theme");
 const roundedCorners =
     Astro.url.searchParams.get("rounded-corners") !== "false";
 const fulllBanner = Astro.url.searchParams.get("full-banner") === "true";
 const showBanner = Astro.url.searchParams.get("banner") !== "false";
-
-const user = await getUser(id).catch(() => null);
-if (!user) return new Response("User not found", { status: 404 });
-console.log(user);
 
 const avatarUrl = getUserAvatar(user);
 const bannerUrl = getUserBanner(user);

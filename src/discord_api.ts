@@ -1,13 +1,22 @@
+import { getRuntime } from "@astrojs/cloudflare/runtime";
+
 const API_BASE = "https://discord.com/api/v10";
 const CDN_BASE = "https://cdn.discordapp.com";
 
-const TOKEN = import.meta.env.DISCORD_TOKEN;
+export async function sendRequest<T extends object = any>(req: Request, route: string) {
+    const { DISCORD_TOKEN } = import.meta.env.SSR
+        ? import.meta.env
+        : getRuntime<any>(req).env;
 
-export async function sendRequest<T extends object = any>(route: string) {
     const res = await fetch(`${API_BASE}${route}`, {
         headers: {
-            "Authorization": `Bot ${TOKEN}`,
+            "Authorization": `Bot ${DISCORD_TOKEN}`,
             "Accept": "application/json"
+        },
+        cf: {
+            // 10 minutes cache
+            cacheTtl: 60 * 10,
+            cacheEverything: true
         }
     });
 
@@ -32,7 +41,7 @@ interface User {
     avatar_decoration: string;
 }
 
-export const getUser = (id: string) => sendRequest<User>(`/users/${id}`);
+export const getUser = (req: Request, id: string) => sendRequest<User>(req, `/users/${id}`);
 
 const getExt = (asset: string) => asset.startsWith("a_") ? "gif" : "webp";
 

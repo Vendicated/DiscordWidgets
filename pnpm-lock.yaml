@@ -14,6 +14,11 @@ dependencies:
     specifier: ^3.54.0
     version: 3.58.0
 
+devDependencies:
+  '@cloudflare/workers-types':
+    specifier: ^4.20230419.0
+    version: 4.20230419.0
+
 packages:
 
   /@ampproject/remapping@2.2.1:
@@ -356,6 +361,10 @@ packages:
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
     dev: false
+
+  /@cloudflare/workers-types@4.20230419.0:
+    resolution: {integrity: sha512-MfNBlHrI/ekRkbLtdAo23D4hkXF+3QD92OCwuXxCUK73HtMHuBqkMp9T/8KFbKNRCnz7PzUderc7Jr5m3eeW3g==}
+    dev: true
 
   /@emmetio/abbreviation@2.3.2:
     resolution: {integrity: sha512-8vqkn4rtjm5Zv34RPgsq3/ij88ri+IcfC2MxPELytrQvfpaLyppscE0YSwDVuIUR6KL5GCBUfr5Mo7SHSbswpA==}

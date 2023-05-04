@@ -15,5 +15,8 @@
     "@astrojs/svelte": "^2.1.1",
     "astro": "^2.3.4",
     "svelte": "^3.54.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20230419.0"
   }
 }
