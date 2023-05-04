@@ -1,0 +1,162 @@
+---
+import { getUser, getUserAvatar, getUserBanner } from "../discord_api";
+
+const id = Astro.url.searchParams.get("id");
+if (!id) return new Response("Missing id parameter", { status: 400 });
+
+const theme = Astro.url.searchParams.get("theme");
+const roundedCorners =
+    Astro.url.searchParams.get("rounded-corners") !== "false";
+const fulllBanner = Astro.url.searchParams.get("full-banner") === "true";
+const showBanner = Astro.url.searchParams.get("banner") !== "false";
+
+const user = await getUser(id).catch(() => null);
+if (!user) return new Response("User not found", { status: 404 });
+console.log(user);
+
+const avatarUrl = getUserAvatar(user);
+const bannerUrl = getUserBanner(user);
+
+const bg =
+    user.accent_color != null
+        ? `#${user.accent_color.toString(16)}`
+        : user.banner_color || "var(--background)";
+---
+
+<html
+    class:list={{
+        "theme-light": theme === "light",
+        "theme-dark": theme !== "light",
+        "rounded-corners": roundedCorners,
+        "full-banner": fulllBanner,
+        "no-banner": !showBanner,
+    }}
+>
+    <head>
+        <meta charset="utf-8" />
+
+        <title>{user.username}'s Discord profile</title>
+
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+    </head>
+
+    <body>
+        <div class="root">
+            {
+                showBanner && (
+                    <div class="banner">
+                        {bannerUrl && <img src={bannerUrl} alt="" />}
+                        <div class="color-banner" style={{ background: bg }} />
+                    </div>
+                )
+            }
+            <div class="profile">
+                <img class="avatar" src={avatarUrl} alt="" />
+                <p>{user.username + "#" + user.discriminator}</p>
+            </div>
+        </div>
+    </body>
+</html>
+
+<style>
+    @font-face {
+        font-family: gg sans;
+        font-style: normal;
+        font-weight: 600;
+        src: url(/assets/gg-sans-600.woff2) format("woff2");
+    }
+
+    .rounded-corners {
+        --border-radius: 0.75em;
+    }
+
+    .full-banner {
+        --banner-height: 120px;
+    }
+
+    .theme-dark body {
+        --background: #2b2d31;
+        --color: #f2f3f5;
+    }
+
+    .theme-light body {
+        --background: white;
+        --color: #313338;
+    }
+
+    .root {
+        border-radius: var(--border-radius);
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background: transparent;
+    }
+
+    .root {
+        width: 340px;
+    }
+
+    .banner {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        height: var(--banner-height, 48px);
+        width: 340px;
+        object-fit: cover;
+    }
+
+    .banner * {
+        position: absolute;
+    }
+
+    .color-banner {
+        height: 100%;
+        width: 100%;
+    }
+
+    .banner,
+    .banner * {
+        border-top-left-radius: var(--border-radius);
+        border-top-right-radius: var(--border-radius);
+    }
+
+    .banner img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        z-index: 2;
+    }
+
+    .profile {
+        background: var(--background);
+        color: var(--color);
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border-bottom-left-radius: var(--border-radius);
+        border-bottom-right-radius: var(--border-radius);
+    }
+
+    .no-banner .profile {
+        border-radius: var(--border-radius);
+    }
+
+    .avatar {
+        height: 48px;
+        width: 48px;
+        border-radius: 50%;
+        margin: 12px;
+    }
+
+    p {
+        font-family: "gg sans", system-ui, sans-serif;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 24px;
+        text-rendering: optimizeLegibility;
+    }
+</style>
