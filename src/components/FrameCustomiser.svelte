@@ -125,21 +125,27 @@
         border-radius: 6px;
     }
 
-    h3 {
-        margin: 0;
-        margin-bottom: 0.2em;
-    }
-
-    pre {
-        border: 1px solid black;
-        padding: 0.5em;
-    }
-
     input[type="text"] {
         background-color: salmon;
         border: none;
         padding: 0.5em;
         border-radius: 6px;
+    }
+
+    h3 {
+        margin: 0;
+        margin-bottom: 0.2em;
+    }
+
+    .code {
+        position: relative;
+    }
+
+    pre {
+        border: 1px solid black;
+        padding: 0.5em;
+        white-space: pre-wrap;
+        overflow-x: scroll;
     }
 
     button {
@@ -151,10 +157,6 @@
         height: 24px;
         right: 4px;
         top: 4px;
-    }
-
-    .code {
-        position: relative;
     }
 
     .did-copy {
