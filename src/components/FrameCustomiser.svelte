@@ -105,6 +105,7 @@
             width="340"
             {height}
             frameborder="0"
+            sandbox
         />
     </section>
 
