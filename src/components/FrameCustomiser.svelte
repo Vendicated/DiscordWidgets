@@ -32,6 +32,14 @@
                 return `rounded-corners=${this.value}`;
             },
         },
+        {
+            key: "discord-icon",
+            name: "Show Discord Icon",
+            value: false,
+            param() {
+                return `discord-icon=${this.value}`;
+            },
+        },
     ];
 
     let userId = "343383572805058560";

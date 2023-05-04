@@ -28,9 +28,9 @@ export async function getPfpColor(user: User) {
     const data = new Uint8Array(length);
     data.set(new Uint8Array(buf));
 
-    const rgb = quantize(data, 1)[0];
+    const [r, g, b] = quantize(data, 1)[0];
 
     return numToHexColor(
-        rgb[0] << 16 | rgb[1] << 8 | rgb[2]
+        r << 16 | g << 8 | b
     );
 }
