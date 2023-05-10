@@ -1,5 +1,10 @@
 ---
-import { getUser, getUserAvatar, getUserBanner } from "../discord_api";
+import {
+    getUser,
+    getUserAvatar,
+    getUserBanner,
+    getUserFlags,
+} from "../discord_api";
 import { getPfpColor, numToHexColor } from "../utils";
 
 const id = Astro.url.searchParams.get("id");
@@ -14,6 +19,7 @@ const roundedCorners =
 const fulllBanner = Astro.url.searchParams.get("full-banner") === "true";
 const showBanner = Astro.url.searchParams.get("banner") !== "false";
 const showIcon = Astro.url.searchParams.get("discord-icon") === "true";
+const showFlags = Astro.url.searchParams.get("flags") === "true";
 
 const avatarUrl = getUserAvatar(user);
 const bannerUrl = getUserBanner(user);
@@ -55,6 +61,18 @@ const bg =
             <div class="profile">
                 <img class="avatar" src={avatarUrl} alt="" />
                 <p>{user.username + "#" + user.discriminator}</p>
+                {
+                    showFlags && (
+                        <div class="flags">
+                            {getUserFlags(user).map(flag => (
+                                <img
+                                    src={`/assets/flags/${flag}.png`}
+                                    alt={`${flag}`}
+                                />
+                            ))}
+                        </div>
+                    )
+                }
                 {
                     showIcon && (
                         <svg
@@ -184,5 +202,16 @@ const bg =
         bottom: 8px;
         right: 8px;
         filter: brightness(0.8);
+    }
+
+    .flags img {
+        width: 18px;
+    }
+
+    .flags {
+        height: 18px;
+        position: absolute;
+        bottom: 6px;
+        right: 30px;
     }
 </style>

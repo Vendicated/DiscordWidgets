@@ -53,3 +53,33 @@ export function getUserBanner(user: User) {
     if (!user.banner) return null;
     return `${CDN_BASE}/banners/${user.id}/${user.banner}.${getExt(user.banner)}?size=512`;
 }
+
+export function getUserFlags(user: User): string[] {
+    const flagNames: Record<number, string> = {
+        0: "Staff",
+        1: "Partner",
+        2: "HypeEvents",
+        3: "BugHunter1",
+        6: "HypeBravery",
+        7: "HypeBrilliance",
+        8: "HypeBalance",
+        9: "EarlySupporter",
+        14: "BugHunter2",
+        16: "Verified Bot",
+        17: "EarlyDeveloper",
+        18: "CertifiedModerator",
+        22: "ActiveDeveloper",
+    };
+
+    const flags: string[] = [];
+
+    if (user.public_flags) {
+        Object.entries(flagNames).forEach(([position, flagName]) => {
+            if (user.public_flags & (1 << Number(position))) {
+                flags.push(flagName);
+            }
+        });
+    }
+
+    return flags;
+}
