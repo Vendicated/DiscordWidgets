@@ -60,7 +60,9 @@ const bg =
             }
             <div class="profile">
                 <img class="avatar" src={avatarUrl} alt="" />
-                <p>{user.username + "#" + user.discriminator}</p>
+                <p class="username">
+                    {user.username + "#" + user.discriminator}
+                </p>
                 {
                     showFlags && (
                         <div class="flags">
@@ -212,6 +214,6 @@ const bg =
         height: 18px;
         position: absolute;
         bottom: 6px;
-        right: 30px;
+        left: 72px;
     }
 </style>
