@@ -60,21 +60,23 @@ const bg =
             }
             <div class="profile">
                 <img class="avatar" src={avatarUrl} alt="" />
-                <p class="username">
-                    {user.username + "#" + user.discriminator}
-                </p>
-                {
-                    showFlags && (
-                        <div class="flags">
-                            {getUserFlags(user).map(flag => (
-                                <img
-                                    src={`/assets/flags/${flag}.png`}
-                                    alt={`${flag}`}
-                                />
-                            ))}
-                        </div>
-                    )
-                }
+                <div class="userinfo">
+                    <p class="username">
+                        {user.username + "#" + user.discriminator}
+                    </p>
+                    {
+                        showFlags && (
+                            <div class="flags">
+                                {getUserFlags(user).map(flag => (
+                                    <img
+                                        src={`/assets/flags/${flag}.png`}
+                                        alt={`${flag}`}
+                                    />
+                                ))}
+                            </div>
+                        )
+                    }
+                </div>
                 {
                     showIcon && (
                         <svg
@@ -210,10 +212,14 @@ const bg =
         width: 18px;
     }
 
-    .flags {
-        height: 18px;
-        position: absolute;
-        bottom: 6px;
-        left: 72px;
+    .username {
+        margin: 8px 0;
+    }
+
+    .userinfo {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
     }
 </style>
