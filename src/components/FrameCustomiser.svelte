@@ -41,7 +41,7 @@
             },
         },
         {
-            key: "flags",
+            key: "badges",
             name: "Show Badges",
             value: false,
             param() {
