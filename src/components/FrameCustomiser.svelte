@@ -42,10 +42,10 @@
         },
         {
             key: "flags",
-            name: "Show Flags",
+            name: "Show Badges",
             value: false,
             param() {
-                return `flags=${this.value}`;
+                return `badges=${this.value}`;
             },
         },
     ];

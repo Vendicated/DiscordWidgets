@@ -39,6 +39,22 @@ export interface User {
     avatar_decoration: string;
 }
 
+const flagNames: Record<number, string> = {
+        0: "Staff",
+        1: "Partner",
+        2: "HypeEvents",
+        3: "BugHunter1",
+        6: "HypeBravery",
+        7: "HypeBrilliance",
+        8: "HypeBalance",
+        9: "EarlySupporter",
+        14: "BugHunter2",
+        16: "Verified Bot",
+        17: "EarlyDeveloper",
+        18: "CertifiedModerator",
+        22: "ActiveDeveloper",
+    };
+
 export const getUser = (req: Request, id: string) => sendRequest<User>(req, `/users/${id}`);
 
 const getExt = (asset: string) => asset.startsWith("a_") ? "gif" : "webp";
@@ -55,22 +71,6 @@ export function getUserBanner(user: User) {
 }
 
 export function getUserFlags(user: User): string[] {
-    const flagNames: Record<number, string> = {
-        0: "Staff",
-        1: "Partner",
-        2: "HypeEvents",
-        3: "BugHunter1",
-        6: "HypeBravery",
-        7: "HypeBrilliance",
-        8: "HypeBalance",
-        9: "EarlySupporter",
-        14: "BugHunter2",
-        16: "Verified Bot",
-        17: "EarlyDeveloper",
-        18: "CertifiedModerator",
-        22: "ActiveDeveloper",
-    };
-
     const flags: string[] = [];
 
     if (user.public_flags) {
