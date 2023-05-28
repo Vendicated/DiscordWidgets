@@ -61,7 +61,7 @@
     width="340"
     height=${height}
     frameborder="0"
-    sandbox
+    sandbox=""
     src="${fullUrl}"
 ></iframe>
 `.trim();
@@ -105,7 +105,7 @@
             width="340"
             {height}
             frameborder="0"
-            sandbox
+            sandbox=""
         />
     </section>
 
