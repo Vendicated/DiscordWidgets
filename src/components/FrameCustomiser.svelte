@@ -40,6 +40,14 @@
                 return `discord-icon=${this.value}`;
             },
         },
+        {
+            key: "badges",
+            name: "Show Badges",
+            value: false,
+            param() {
+                return `badges=${this.value}`;
+            },
+        },
     ];
 
     let userId = "343383572805058560";
