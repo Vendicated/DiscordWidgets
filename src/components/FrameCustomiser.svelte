@@ -184,4 +184,8 @@
     .did-copy {
         color: green;
     }
+    
+    iframe {
+        width: -moz-available;
+    }
 </style>
