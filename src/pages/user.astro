@@ -28,6 +28,11 @@ const bg =
     user.accent_color != null
         ? numToHexColor(user.accent_color)
         : user.banner_color || "var(--background)";
+
+Astro.response.headers.set(
+    "Cache-Control",
+    "public, max-age=300, s-maxage=300"
+);
 ---
 
 <html
