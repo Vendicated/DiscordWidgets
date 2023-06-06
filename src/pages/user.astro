@@ -35,15 +35,7 @@ Astro.response.headers.set(
 );
 ---
 
-<html
-    class:list={{
-        "theme-light": theme === "light",
-        "theme-dark": theme !== "light",
-        "rounded-corners": roundedCorners,
-        "full-banner": fulllBanner,
-        "no-banner": !showBanner,
-    }}
->
+<html>
     <head>
         <meta charset="utf-8" />
 
@@ -53,7 +45,15 @@ Astro.response.headers.set(
         <meta name="viewport" content="width=device-width" />
     </head>
 
-    <body>
+    <body
+        class:list={{
+            "theme-light": theme === "light",
+            "theme-dark": theme !== "light",
+            "rounded-corners": roundedCorners,
+            "full-banner": fulllBanner,
+            "no-banner": !showBanner,
+        }}
+    >
         <div class="root">
             {
                 showBanner && (
@@ -102,6 +102,21 @@ Astro.response.headers.set(
     </body>
 </html>
 
+<script>
+    window.addEventListener("message", ({ data }) => {
+        switch (data?.command) {
+            case "setTheme":
+                const theme = data.theme;
+                document.body.classList.toggle(
+                    "theme-light",
+                    theme === "light"
+                );
+                document.body.classList.toggle("theme-dark", theme !== "light");
+                break;
+        }
+    });
+</script>
+
 <style>
     @font-face {
         font-family: gg sans;
@@ -118,12 +133,12 @@ Astro.response.headers.set(
         --banner-height: 120px;
     }
 
-    .theme-dark body {
+    .theme-dark {
         --background: #2b2d31;
         --color: #f2f3f5;
     }
 
-    .theme-light body {
+    .theme-light {
         --background: white;
         --color: #313338;
     }
