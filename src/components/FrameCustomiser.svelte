@@ -13,7 +13,6 @@
             description: "Theme: light | dark",
             command:
                 'widget.contentWindow.postMessage({ command: "setTheme", theme: "dark" }, "*")',
-            ran: false,
             timeout: null as number | null,
             state: ActionState.None,
         },
@@ -211,26 +210,28 @@
                 <div class="api-entry">
                     <h4>{cmd.title}</h4>
                     <p>{cmd.description}</p>
-                    <code
-                        spellcheck="false"
-                        contenteditable
-                        bind:textContent={cmd.command}
-                    />
-
-                    <button
-                        on:click={e => runCommand(e.currentTarget, cmd)}
-                        class={cmd.state}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 -960 960 960"
+                    <div class="api-code">
+                        <code
+                            spellcheck="false"
+                            contenteditable
+                            bind:textContent={cmd.command}
+                        />
+                        <button
+                            on:click={e => runCommand(e.currentTarget, cmd)}
+                            class={cmd.state}
                         >
-                            <path
-                                fill="currentColor"
-                                d="M320-203v-560l440 280-440 280Zm60-280Zm0 171 269-171-269-171v342Z"
-                            />
-                        </svg>
-                    </button>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 -960 960 960"
+                            >
+                                <title>Run Code</title>
+                                <path
+                                    fill="currentColor"
+                                    d="M320-203v-560l440 280-440 280Zm60-280Zm0 171 269-171-269-171v342Z"
+                                />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             {/each}
         </div>
@@ -301,7 +302,7 @@
         padding: 0.5em;
     }
 
-    .api-entry {
+    .api-code {
         position: relative;
     }
 
@@ -312,6 +313,11 @@
         background: darksalmon;
         border-radius: 6px;
     }
+
+    .api-entry code:focus {
+        outline: 1px solid black;
+    }
+
     p {
         margin: 0;
     }
