@@ -1,4 +1,24 @@
 <script lang="ts">
+    import InlineCode from "./InlineCode.svelte";
+
+    const enum ActionState {
+        None = "",
+        Success = "action-success",
+        Fail = "action-fail",
+    }
+
+    let commands = [
+        {
+            title: "Change Theme",
+            description: "Theme: light | dark",
+            command:
+                'widget.contentWindow.postMessage({ command: "setTheme", theme: "dark" }, "*")',
+            ran: false,
+            timeout: null as number | null,
+            state: ActionState.None,
+        },
+    ];
+
     const switches = [
         {
             key: "dark",
@@ -83,6 +103,27 @@
         clearTimeout(timeout);
         timeout = setTimeout(() => (didCopy = false), 800);
     }
+
+    function runCommand(target: any, command: (typeof commands)[number]) {
+        const code =
+            'const widget = document.querySelector("iframe");' +
+            command.command;
+
+        try {
+            Function(code)();
+            command.state = ActionState.Success;
+        } catch {
+            command.state = ActionState.Fail;
+        }
+
+        clearTimeout(command.timeout);
+        command.timeout = setTimeout(() => {
+            command.state = ActionState.None;
+            commands = commands;
+        }, 800);
+
+        commands = commands;
+    }
 </script>
 
 <div class="root">
@@ -108,19 +149,22 @@
     <section>
         <h3>Preview</h3>
         <iframe
-            title="User Embed"
+            title="Discord user embed"
             src={url}
             width="340"
             {height}
             frameborder="0"
-            sandbox=""
+            sandbox="allow-scripts"
         />
     </section>
 
     <section>
         <h3>HTML</h3>
         <div class="code">
-            <button on:click={copyToClip} class={didCopy ? "did-copy" : ""}>
+            <button
+                on:click={copyToClip}
+                class={didCopy ? "action-success" : ""}
+            >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                     <title>Copy Code</title>
                     <path
@@ -132,6 +176,63 @@
             <div class="code-wrapper">
                 <code>{code}</code>
             </div>
+        </div>
+    </section>
+
+    <section class="api">
+        <h3>postMessage() API</h3>
+        <p>
+            The widget supports some commands via <InlineCode
+                >window.postMessage()</InlineCode
+            >
+            (<a
+                href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage"
+                >Docs on mdn</a
+            >)
+        </p>
+        <p>
+            To use them, you first need to allow the iframe to execute
+            javascript via <InlineCode>sandbox="allow-scripts"</InlineCode> (this
+            is already the default if you copied the iframe code from above)
+            <br />
+            <br />
+            The snippets below assume <InlineCode>widget</InlineCode> is a variable
+            holding the iframe element.
+            <br />
+            You can for example do this via
+            <InlineCode
+                >const widget = document.querySelector('iframe[title="Discord
+                user embed"]')
+            </InlineCode>
+        </p>
+
+        <div class="api-table">
+            {#each commands as cmd}
+                <div class="api-entry">
+                    <h4>{cmd.title}</h4>
+                    <p>{cmd.description}</p>
+                    <code
+                        spellcheck="false"
+                        contenteditable
+                        bind:textContent={cmd.command}
+                    />
+
+                    <button
+                        on:click={e => runCommand(e.currentTarget, cmd)}
+                        class={cmd.state}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 -960 960 960"
+                        >
+                            <path
+                                fill="currentColor"
+                                d="M320-203v-560l440 280-440 280Zm60-280Zm0 171 269-171-269-171v342Z"
+                            />
+                        </svg>
+                    </button>
+                </div>
+            {/each}
         </div>
     </section>
 </div>
@@ -152,7 +253,8 @@
         border-radius: 6px;
     }
 
-    h3 {
+    h3,
+    h4 {
         margin: 0;
         margin-bottom: 0.2em;
     }
@@ -181,7 +283,36 @@
         top: 4px;
     }
 
-    .did-copy {
+    .action-success {
         color: green;
+    }
+
+    .action-fail {
+        color: red;
+    }
+
+    .api {
+        margin-block: 1em;
+    }
+
+    .api-table {
+        margin-top: 0.5em;
+        border: 1px solid black;
+        padding: 0.5em;
+    }
+
+    .api-entry {
+        position: relative;
+    }
+
+    .api-entry code {
+        margin-top: 0.2em;
+        display: block;
+        padding: 0.5em;
+        background: darksalmon;
+        border-radius: 6px;
+    }
+    p {
+        margin: 0;
     }
 </style>
