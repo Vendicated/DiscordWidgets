@@ -67,7 +67,7 @@ Astro.response.headers.set(
                 <img class="avatar" src={avatarUrl} alt="" />
                 <div class="userinfo">
                     <p class="username">
-                        {user.username + "#" + user.discriminator}
+                        {user.username + (user.discriminator ? "#" + user.discriminator : "")}
                     </p>
                     {
                         showFlags && (
