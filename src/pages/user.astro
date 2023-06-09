@@ -4,6 +4,7 @@ import {
     getUserAvatar,
     getUserBanner,
     getUserFlags,
+    isPomelod,
 } from "../discord_api";
 import { numToHexColor } from "../utils";
 
@@ -69,7 +70,12 @@ if (import.meta.env.PROD)
                 <img class="avatar" src={avatarUrl} alt="" />
                 <div class="userinfo">
                     <p class="username">
-                        {user.username + (user.discriminator !== "0" ? "#" + user.discriminator : "")}
+                        {
+                            user.username +
+                                (isPomelod(user)
+                                    ? ""
+                                    : "#" + user.discriminator)
+                        }
                     </p>
                     {
                         showFlags && (

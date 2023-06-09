@@ -59,8 +59,18 @@ export const getUser = (req: Request, id: string) => sendRequest<User>(req, `/us
 
 const getExt = (asset: string) => asset.startsWith("a_") ? "gif" : "webp";
 
+export function isPomelod(user: User) {
+    return user.discriminator === "0";
+}
+
 export function getUserAvatar(user: User, format?: "webp" | "png") {
-    if (!user.avatar) return `${CDN_BASE}/embed/avatars/${Number(user.discriminator) % 6}.png`;
+    if (!user.avatar) {
+        const n = isPomelod(user)
+            ? (Number(user.id) >> 22) % 6
+            : Number(user.discriminator) % 5;
+
+        return `${CDN_BASE}/embed/avatars/${n}.png`;
+    }
 
     return `${CDN_BASE}/avatars/${user.id}/${user.avatar}.${format ?? getExt(user.avatar)}?size=256`;
 }
