@@ -5,7 +5,7 @@ import {
     getUserBanner,
     getUserFlags,
 } from "../discord_api";
-import { getPfpColor, numToHexColor } from "../utils";
+import { numToHexColor } from "../utils";
 
 const id = Astro.url.searchParams.get("id");
 if (!id) return new Response("Missing id parameter", { status: 400 });
@@ -20,6 +20,7 @@ const fulllBanner = Astro.url.searchParams.get("full-banner") === "true";
 const showBanner = Astro.url.searchParams.get("banner") !== "false";
 const showIcon = Astro.url.searchParams.get("discord-icon") === "true";
 const showFlags = Astro.url.searchParams.get("badges") === "true";
+const guessNitro = Astro.url.searchParams.get("guess-nitro") === "true";
 
 const avatarUrl = getUserAvatar(user);
 const bannerUrl = getUserBanner(user);
@@ -29,10 +30,11 @@ const bg =
         ? numToHexColor(user.accent_color)
         : user.banner_color || "var(--background)";
 
-Astro.response.headers.set(
-    "Cache-Control",
-    "public, max-age=300, s-maxage=300"
-);
+if (import.meta.env.PROD)
+    Astro.response.headers.set(
+        "Cache-Control",
+        "public, max-age=300, s-maxage=300"
+    );
 ---
 
 <html>
@@ -72,10 +74,12 @@ Astro.response.headers.set(
                     {
                         showFlags && (
                             <div class="flags">
-                                {getUserFlags(user).map(flag => (
+                                {getUserFlags(user, guessNitro).map(flag => (
                                     <img
-                                        src={`/assets/badges/${flag}.png`}
-                                        alt={`${flag}`}
+                                        src={`/assets/badges/${encodeURIComponent(
+                                            flag
+                                        )}.png`}
+                                        title={`${flag}`}
                                     />
                                 ))}
                             </div>

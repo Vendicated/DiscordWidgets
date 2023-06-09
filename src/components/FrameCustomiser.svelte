@@ -31,47 +31,41 @@
             key: "show-banner",
             name: "Show Banner",
             value: true,
-            param() {
-                return `banner=${this.value}`;
-            },
         },
         {
             key: "full-banner",
             name: "Show Full Banner",
             value: false,
-            param() {
-                return `full-banner=${this.value}`;
-            },
         },
         {
             key: "rounded-corners",
             name: "Rounded Corners",
             value: true,
-            param() {
-                return `rounded-corners=${this.value}`;
-            },
         },
         {
             key: "discord-icon",
             name: "Show Discord Icon",
             value: false,
-            param() {
-                return `discord-icon=${this.value}`;
-            },
         },
         {
             key: "badges",
             name: "Show Badges",
             value: false,
-            param() {
-                return `badges=${this.value}`;
-            },
+        },
+        {
+            key: "guess-nitro",
+            name: "Guess whether user has Nitro (for Nitro badge)",
+            value: false,
         },
     ];
 
     let userId = "343383572805058560";
 
-    $: url = `/user?id=${userId}&` + switches.map(sw => sw.param()).join("&");
+    $: url =
+        `/user?id=${userId}&` +
+        switches
+            .map(sw => ("param" in sw ? sw.param!() : `${sw.key}=${sw.value}`))
+            .join("&");
     $: fullUrl = import.meta.env.SSR ? "" : location.origin + url;
 
     $: bannerHeight = switches.find(s => s.key === "show-banner")!.value

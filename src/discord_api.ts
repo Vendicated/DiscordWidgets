@@ -40,20 +40,20 @@ export interface User {
 }
 
 const flagNames: Record<number, string> = {
-        0: "Staff",
-        1: "Partner",
-        2: "HypeEvents",
-        3: "BugHunter1",
-        6: "HypeBravery",
-        7: "HypeBrilliance",
-        8: "HypeBalance",
-        9: "EarlySupporter",
-        14: "BugHunter2",
-        16: "Verified Bot",
-        17: "EarlyDeveloper",
-        18: "CertifiedModerator",
-        22: "ActiveDeveloper",
-    };
+    0: "Staff",
+    1: "Partner",
+    2: "Hypesquad Events",
+    3: "Bug Hunter Level 1",
+    6: "Hypesquad Bravery",
+    7: "Hypesquad Brilliance",
+    8: "Hypesquad Balance",
+    9: "Early Supporter",
+    14: "Bug Hunter Level 2",
+    16: "Verified Bot",
+    17: "Early Developer",
+    18: "Certified Moderator",
+    22: "Active Developer",
+};
 
 export const getUser = (req: Request, id: string) => sendRequest<User>(req, `/users/${id}`);
 
@@ -70,7 +70,7 @@ export function getUserBanner(user: User) {
     return `${CDN_BASE}/banners/${user.id}/${user.banner}.${getExt(user.banner)}?size=512`;
 }
 
-export function getUserFlags(user: User): string[] {
+export function getUserFlags(user: User, guessNitro: boolean): string[] {
     const flags: string[] = [];
 
     if (user.public_flags) {
@@ -79,6 +79,11 @@ export function getUserFlags(user: User): string[] {
                 flags.push(flagName);
             }
         });
+    }
+
+    if (guessNitro) {
+        const hasNitro = user.avatar?.startsWith("a_") || !!user.avatar_decoration;
+        if (hasNitro) flags.push("Nitro");
     }
 
     return flags;
