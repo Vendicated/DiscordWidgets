@@ -82,9 +82,9 @@ if (import.meta.env.PROD)
                             <div class="flags">
                                 {getUserFlags(user, guessNitro).map(flag => (
                                     <img
-                                        src={`/assets/badges/${encodeURIComponent(
-                                            flag
-                                        )}.png`}
+                                        src={`/assets/badges/${flag
+                                            .replaceAll(" ", "-")
+                                            .toLowerCase()}.png`}
                                         title={`${flag}`}
                                     />
                                 ))}
