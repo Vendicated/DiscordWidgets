@@ -28,7 +28,7 @@
             },
         },
         {
-            key: "show-banner",
+            key: "banner",
             name: "Show Banner",
             value: true,
         },
