@@ -68,7 +68,7 @@
             .join("&");
     $: fullUrl = import.meta.env.SSR ? "" : location.origin + url;
 
-    $: bannerHeight = switches.find(s => s.key === "show-banner")!.value
+    $: bannerHeight = switches.find(s => s.key === "banner")!.value
         ? switches.find(s => s.key === "full-banner")!.value
             ? 120
             : 48
