@@ -7,18 +7,66 @@
         Fail = "action-fail",
     }
 
-    let commands = [
+    interface Command {
+        title: string;
+        description: string;
+        command: string;
+        state?: ActionState;
+        timeout?: ReturnType<typeof setTimeout>;
+    }
+
+    interface Switch {
+        key: string;
+        name: string;
+        value: boolean;
+        param?(): string;
+    }
+
+    interface TextOption {
+        key: string;
+        name: string;
+        value: string;
+    }
+
+    function s(a: TemplateStringsArray, ...args: any[]) {
+        let s = a.map((s, i) => s + (args[i] ?? "")).join("");
+
+        const minIndent =
+            s
+                .match(/^ *(?=\S)/gm)
+                ?.reduce(
+                    (prev, curr) => Math.min(prev, curr.length),
+                    Infinity
+                ) ?? 0;
+
+        return s.replace(new RegExp(`^ {${minIndent}}`, "gm"), "").trim();
+    }
+
+    let commands: Command[] = [
         {
             title: "Change Theme",
             description: "Theme: light | dark",
-            command:
-                'widget.contentWindow.postMessage({ command: "setTheme", theme: "dark" }, "*")',
-            timeout: null as number | null,
-            state: ActionState.None,
+            command: s`
+                widget.contentWindow.postMessage({
+                    command: "setTheme",
+                    theme: "dark"
+                }, "*")
+                `,
+        },
+        {
+            title: "Change Colours",
+            description: "Change the background and/or foreground colour",
+            command: s`
+                widget.contentWindow.postMessage({
+                    command: "setColors",
+                    backgroundColor: "#000000",
+                    foregroundColor: "#ffffff",
+                }, "*")
+                `,
         },
     ];
 
-    const switches = [
+    const switches: Switch[] = [
         {
             key: "dark",
             name: "Dark Theme",
@@ -59,13 +107,32 @@
         },
     ];
 
+    const textOptions: TextOption[] = [
+        {
+            key: "background-color",
+            name: "Background Colour (html hex colour)",
+            value: "",
+        },
+        {
+            key: "foreground-color",
+            name: "Foreground Colour (html hex colour)",
+            value: "",
+        },
+    ];
+
     let userId = "343383572805058560";
 
     $: url =
         `/user?id=${userId}&` +
         switches
             .map(sw => ("param" in sw ? sw.param!() : `${sw.key}=${sw.value}`))
+            .join("&") +
+        "&" +
+        textOptions
+            .filter(opt => opt.value)
+            .map(o => `${o.key}=${encodeURIComponent(o.value)}`)
             .join("&");
+
     $: fullUrl = import.meta.env.SSR ? "" : location.origin + url;
 
     $: bannerHeight = switches.find(s => s.key === "banner")!.value
@@ -76,16 +143,16 @@
 
     $: height = 72 + bannerHeight;
 
-    $: code = `
-<iframe
-    title="Discord user embed"
-    width="340"
-    height=${height}
-    frameborder="0"
-    sandbox="allow-scripts"
-    src="${fullUrl}"
-></iframe>
-`.trim();
+    $: code = s`
+        <iframe
+            title="Discord user embed"
+            width="340"
+            height=${height}
+            frameborder="0"
+            sandbox="allow-scripts"
+            src="${fullUrl}"
+        ></iframe>
+    `;
 
     let didCopy = false;
     let timeout: ReturnType<typeof setTimeout>;
@@ -134,6 +201,14 @@
                 <label>
                     <input type="checkbox" bind:checked={sw.value} />
                     {sw.name}
+                </label>
+            </div>
+        {/each}
+        {#each textOptions as opt}
+            <div>
+                <label class="text-opt">
+                    <h4>{opt.name}</h4>
+                    <input type="text" bind:value={opt.value} />
                 </label>
             </div>
         {/each}
@@ -294,6 +369,8 @@
         margin-top: 0.5em;
         border: 1px solid black;
         padding: 0.5em;
+        display: grid;
+        gap: 0.5em;
     }
 
     .api-code {
@@ -306,13 +383,15 @@
         padding: 0.5em;
         background: darksalmon;
         border-radius: 6px;
+        white-space: pre-wrap;
     }
 
     .api-entry code:focus {
         outline: 1px solid black;
     }
 
-    p {
+    p,
+    pre {
         margin: 0;
     }
 </style>

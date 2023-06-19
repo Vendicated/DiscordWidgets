@@ -6,7 +6,7 @@ import {
     getUserFlags,
     isPomelod,
 } from "../discord_api";
-import { numToHexColor } from "../utils";
+import { hexColorRegex, numToHexColor } from "../utils";
 
 const id = Astro.url.searchParams.get("id");
 if (!id) return new Response("Missing id parameter", { status: 400 });
@@ -23,13 +23,26 @@ const showIcon = Astro.url.searchParams.get("discord-icon") === "true";
 const showFlags = Astro.url.searchParams.get("badges") === "true";
 const guessNitro = Astro.url.searchParams.get("guess-nitro") === "true";
 
+let style = "";
+for (const key of ["background-color", "foreground-color"]) {
+    const value = Astro.url.searchParams.get(key);
+    if (!value) continue;
+
+    if (!hexColorRegex.test(value))
+        return new Response(`Invalid color parameter ${key}=${value}`, {
+            status: 400,
+        });
+
+    style += `--${key}: ${value};`;
+}
+
 const avatarUrl = getUserAvatar(user);
 const bannerUrl = getUserBanner(user);
 
 const bg =
     user.accent_color != null
         ? numToHexColor(user.accent_color)
-        : user.banner_color || "var(--background)";
+        : user.banner_color || "var(--background-color)";
 
 if (import.meta.env.PROD)
     Astro.response.headers.set(
@@ -56,6 +69,7 @@ if (import.meta.env.PROD)
             "full-banner": fulllBanner,
             "no-banner": !showBanner,
         }}
+        style={style}
     >
         <div class="root">
             {
@@ -97,7 +111,7 @@ if (import.meta.env.PROD)
                         <svg
                             viewBox="0 0 640 512"
                             role="img"
-                            fill="var(--color)"
+                            fill="var(--foreground-color)"
                         >
                             <title>Discord</title>
                             <path
@@ -113,6 +127,8 @@ if (import.meta.env.PROD)
 </html>
 
 <script>
+    import { hexColorRegex } from "../utils";
+
     window.addEventListener("message", ({ data }) => {
         switch (data?.command) {
             case "setTheme":
@@ -122,6 +138,22 @@ if (import.meta.env.PROD)
                     theme === "light"
                 );
                 document.body.classList.toggle("theme-dark", theme !== "light");
+                break;
+            case "setColors":
+                const { foregroundColor, backgroundColor } = data;
+
+                if (hexColorRegex.test(foregroundColor))
+                    document.body.style.setProperty(
+                        "--foreground-color",
+                        foregroundColor
+                    );
+
+                if (hexColorRegex.test(backgroundColor))
+                    document.body.style.setProperty(
+                        "--background-color",
+                        backgroundColor
+                    );
+
                 break;
         }
     });
@@ -145,13 +177,13 @@ if (import.meta.env.PROD)
     }
 
     .theme-dark {
-        --background: #2b2d31;
-        --color: #f2f3f5;
+        --background-color: #2b2d31;
+        --foreground-color: #f2f3f5;
     }
 
     .theme-light {
-        --background: white;
-        --color: #313338;
+        --background-color: white;
+        --foreground-color: #313338;
     }
 
     .root {
@@ -200,8 +232,8 @@ if (import.meta.env.PROD)
     }
 
     .profile {
-        background: var(--background);
-        color: var(--color);
+        background: var(--background-color);
+        color: var(--foreground-color);
 
         position: relative;
         display: flex;
