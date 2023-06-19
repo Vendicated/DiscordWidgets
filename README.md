@@ -6,4 +6,5 @@ Not fully done yet, I still want to make some improvements and additions!! png/s
 
 https://widgets.vendicated.dev
 
-![image](https://user-images.githubusercontent.com/45497981/236077122-a6961633-e044-4dad-a3be-65aee2acd651.png)
+![image](https://github.com/Vendicated/DiscordWidgets/assets/45497981/4e51d64c-66b4-45e4-8ee4-4868cdeb6310)
+
