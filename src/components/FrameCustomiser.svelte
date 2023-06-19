@@ -26,6 +26,7 @@
         key: string;
         name: string;
         value: string;
+        placeholder: string;
     }
 
     function s(a: TemplateStringsArray, ...args: any[]) {
@@ -110,12 +111,14 @@
     const textOptions: TextOption[] = [
         {
             key: "background-color",
-            name: "Background Colour (html hex colour)",
+            name: "Background Colour",
+            placeholder: "#000000",
             value: "",
         },
         {
             key: "foreground-color",
-            name: "Foreground Colour (html hex colour)",
+            name: "Foreground Colour",
+            placeholder: "#fff",
             value: "",
         },
     ];
@@ -208,7 +211,11 @@
             <div>
                 <label class="text-opt">
                     <h4>{opt.name}</h4>
-                    <input type="text" bind:value={opt.value} />
+                    <input
+                        type="text"
+                        placeholder={opt.placeholder}
+                        bind:value={opt.value}
+                    />
                 </label>
             </div>
         {/each}
@@ -323,6 +330,11 @@
         border-radius: 6px;
     }
 
+    input[type="text"]::placeholder {
+        color: black;
+        opacity: 0.4;
+    }
+
     h3,
     h4 {
         margin: 0;
@@ -390,8 +402,7 @@
         outline: 1px solid black;
     }
 
-    p,
-    pre {
+    p {
         margin: 0;
     }
 </style>
