@@ -12,7 +12,11 @@ const id = Astro.url.searchParams.get("id");
 if (!id) return new Response("Missing id parameter", { status: 400 });
 
 const user = await getUser(Astro.request, id).catch(e => {});
-if (!user) return new Response("User not found", { status: 404 });
+if (!user)
+    return new Response(
+        "User not found.\nIf this is unexpected, please see\nhttps://github.com/Vendicated/DiscordWidgets/issues/16",
+        { status: 404 }
+    );
 
 const theme = Astro.url.searchParams.get("theme");
 const roundedCorners =
