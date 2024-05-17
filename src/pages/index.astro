@@ -15,6 +15,19 @@ import FrameCustomiser from "../components/FrameCustomiser.svelte";
         />
     </head>
     <body>
+        <div class="card">
+            Discord made a change to their API that broke widgets.
+            <br />
+            They already reverted this change, but it will take some time for the
+            revert to deploy.
+            <br />
+            If your widget is broken for now, please just wait patiently!
+            <br />
+            See <a href="https://github.com/Vendicated/DiscordWidgets/issues/16"
+                >Vendicated/DiscordWidgets#16</a
+            > for more info.
+        </div>
+
         <h1>Discord User Widget</h1>
         <FrameCustomiser client:load />
 
@@ -38,5 +51,13 @@ import FrameCustomiser from "../components/FrameCustomiser.svelte";
     h3 {
         margin: 0;
         margin-bottom: 0.2em;
+    }
+
+    .card {
+        border: 2px solid black;
+        border-radius: 16px;
+        background: #f2f28d;
+        display: inline-block;
+        padding: 16px 20px;
     }
 </style>

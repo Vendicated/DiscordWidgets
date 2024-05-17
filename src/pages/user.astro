@@ -11,14 +11,32 @@ import { hexColorRegex, numToHexColor } from "../utils";
 const id = Astro.url.searchParams.get("id");
 if (!id) return new Response("Missing id parameter", { status: 400 });
 
-const user = await getUser(Astro.request, id).catch(e => {});
-if (!user)
-    return new Response(
-        "User not found.\nIf this is unexpected, please see\nhttps://github.com/Vendicated/DiscordWidgets/issues/16",
-        { status: 404 }
-    );
-
 const theme = Astro.url.searchParams.get("theme");
+
+const user = await getUser(Astro.request, id).catch(e => {});
+if (!user) {
+    const bodyStyle =
+        theme === "light"
+            ? "background: white; color: black;"
+            : "background: black; color: white;";
+
+    return new Response(
+        `
+        <!DOCTYPE html>
+        <style>
+            body { ${bodyStyle} }
+            h1 { margin: 0; }
+            a { color: red; }
+        </style>
+        <h1>User not found</h1>
+        <p>
+            If this is unexpected, please see <br />
+            <a href="https://github.com/Vendicated/DiscordWidgets/issues/16">Vendicated/DiscordWidgets#16</a>
+        </p>`,
+        { status: 404, headers: { "Content-Type": "text/html" } }
+    );
+}
+
 const roundedCorners =
     Astro.url.searchParams.get("rounded-corners") !== "false";
 const fulllBanner = Astro.url.searchParams.get("full-banner") === "true";
