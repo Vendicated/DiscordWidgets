@@ -24,14 +24,15 @@ if (!user) {
         `
         <!DOCTYPE html>
         <style>
-            body { ${bodyStyle} }
-            h1 { margin: 0; }
+            body { margin: 0; padding: 16px; font: system-ui, sans-serif; ${bodyStyle} }
+            h1, p { margin: 0; }
+            h1 { margin-bottom: 8px; }
             a { color: red; }
         </style>
         <h1>User not found</h1>
         <p>
             If this is unexpected, please see <br />
-            <a href="https://github.com/Vendicated/DiscordWidgets/issues/16">Vendicated/DiscordWidgets#16</a>
+            <a href="https://github.com/Vendicated/DiscordWidgets/issues/16" target="_blank">Vendicated/DiscordWidgets#16</a>
         </p>`,
         { status: 200, headers: { "Content-Type": "text/html" } }
     );
