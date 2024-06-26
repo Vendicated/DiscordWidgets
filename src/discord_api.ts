@@ -72,12 +72,12 @@ export function getUserAvatar(user: User, format?: "webp" | "png") {
         return `${CDN_BASE}/embed/avatars/${n}.png`;
     }
 
-    return `${CDN_BASE}/avatars/${user.id}/${user.avatar}.${format ?? getExt(user.avatar)}?size=256`;
+    return `${CDN_BASE}/avatars/${user.id}/${user.avatar}.${format ?? getExt(user.avatar)}?size=256&quality=lossless`;
 }
 
 export function getUserBanner(user: User) {
     if (!user.banner) return null;
-    return `${CDN_BASE}/banners/${user.id}/${user.banner}.${getExt(user.banner)}?size=512`;
+    return `${CDN_BASE}/banners/${user.id}/${user.banner}.${getExt(user.banner)}?size=512&quality=lossless`;
 }
 
 export function getUserFlags(user: User, guessNitro: boolean): string[] {
