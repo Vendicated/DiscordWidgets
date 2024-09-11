@@ -62,6 +62,7 @@
                     command: "setColors",
                     backgroundColor: "#000000",
                     foregroundColor: "#ffffff",
+                    foregroundSecondary: "#fefefe",
                 }, "*")
                 `,
         },
@@ -121,6 +122,12 @@
             placeholder: "#fff",
             value: "",
         },
+        {
+            key: "foreground-secondary",
+            name: "Secondary Colour (for Display Name)",
+            placeholder: "#fff",
+            value: "",
+        }
     ];
 
     let userId = "343383572805058560";
