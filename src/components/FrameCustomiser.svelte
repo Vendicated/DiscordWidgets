@@ -150,7 +150,7 @@
         <iframe
             title="Discord user embed"
             width="340"
-            height=${height}
+            height="${height}"
             frameborder="0"
             sandbox="allow-scripts"
             src="${fullUrl}"
