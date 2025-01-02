@@ -45,6 +45,7 @@ const showBanner = Astro.url.searchParams.get("banner") !== "false";
 const showIcon = Astro.url.searchParams.get("discord-icon") === "true";
 const showFlags = Astro.url.searchParams.get("badges") === "true";
 const guessNitro = Astro.url.searchParams.get("guess-nitro") === "true";
+const showDisplayName = Astro.url.searchParams.get("display-name") !== "false";
 
 let style = "";
 for (const key of ["background-color", "foreground-color", "foreground-secondary"]) {
@@ -107,8 +108,8 @@ if (import.meta.env.PROD)
                 <div class="profile">
                     <img class="avatar" src={avatarUrl} alt="" />
                     <div class="userinfo">
-                        {user.global_name && <span class="display-name">{user.global_name}</span>}
-                        <span class={`username ${user.global_name ? 'with-display-name' : ''}`}>
+                        {user.global_name && showDisplayName && <span class="display-name">{user.global_name}</span>}
+                        <span class={`username ${(user.global_name && showDisplayName) ? 'with-display-name' : ''}`}>
                             {
                                 user.username +
                                     (isPomelod(user)
