@@ -78,6 +78,11 @@
             },
         },
         {
+            key: "display-name",
+            name: "Show Display Name",
+            value: true,
+        },
+        {
             key: "banner",
             name: "Show Banner",
             value: true,
@@ -127,7 +132,7 @@
             name: "Secondary Colour (for Display Name)",
             placeholder: "#fff",
             value: "",
-        }
+        },
     ];
 
     let userId = "343383572805058560";
