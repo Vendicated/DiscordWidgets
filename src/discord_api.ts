@@ -57,6 +57,7 @@ export interface User {
     banner_color: string | null;
     accent_color: number;
     avatar_decoration: string;
+    global_name: string | null;
 }
 
 const flagNames: Record<number, string> = {

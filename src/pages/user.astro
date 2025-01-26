@@ -37,14 +37,15 @@ if (!user) {
 
 const roundedCorners =
     Astro.url.searchParams.get("rounded-corners") !== "false";
-const fulllBanner = Astro.url.searchParams.get("full-banner") === "true";
+const fullBanner = Astro.url.searchParams.get("full-banner") === "true";
 const showBanner = Astro.url.searchParams.get("banner") !== "false";
 const showIcon = Astro.url.searchParams.get("discord-icon") === "true";
 const showFlags = Astro.url.searchParams.get("badges") === "true";
 const guessNitro = Astro.url.searchParams.get("guess-nitro") === "true";
+const showDisplayName = Astro.url.searchParams.get("display-name") !== "false";
 
 let style = "";
-for (const key of ["background-color", "foreground-color"]) {
+for (const key of ["background-color", "foreground-color", "foreground-secondary"]) {
     const value = Astro.url.searchParams.get(key);
     if (!value) continue;
 
@@ -86,7 +87,7 @@ if (import.meta.env.PROD)
             "theme-light": theme === "light",
             "theme-dark": theme !== "light",
             "rounded-corners": roundedCorners,
-            "full-banner": fulllBanner,
+            "full-banner": fullBanner,
             "no-banner": !showBanner,
         }}
         style={style}
@@ -100,34 +101,37 @@ if (import.meta.env.PROD)
                     </div>
                 )
             }
-            <div class="profile">
-                <img class="avatar" src={avatarUrl} alt="" />
-                <div class="userinfo">
-                    <p class="username">
+            <div class="container">
+                <div class="profile">
+                    <img class="avatar" src={avatarUrl} alt="" />
+                    <div class="userinfo">
+                        {user.global_name && showDisplayName && <span class="display-name">{user.global_name}</span>}
+                        <span class={`username ${(user.global_name && showDisplayName) ? 'with-display-name' : ''}`}>
+                            {
+                                user.username +
+                                    (isPomelod(user)
+                                        ? ""
+                                        : "#" + user.discriminator)
+                            }
+                        </span>
+                    </div>
+                </div>
+                <div class="meta">
+                    <div class="flags">
                         {
-                            user.username +
-                                (isPomelod(user)
-                                    ? ""
-                                    : "#" + user.discriminator)
-                        }
-                    </p>
-                    {
-                        showFlags && (
-                            <div class="flags">
-                                {getUserFlags(user, guessNitro).map(flag => (
+                            showFlags && (
+                                getUserFlags(user, guessNitro).map(flag => (
                                     <img
                                         src={`/assets/badges/${flag
                                             .replaceAll(" ", "-")
                                             .toLowerCase()}.png`}
                                         title={`${flag}`}
                                     />
-                                ))}
-                            </div>
-                        )
-                    }
-                </div>
-                {
-                    showIcon && (
+                                ))
+                            )
+                        }
+                    </div>
+                    {showIcon && <div class="discord">
                         <svg
                             viewBox="0 0 640 512"
                             role="img"
@@ -139,8 +143,8 @@ if (import.meta.env.PROD)
                                 d="M524.531 69.836a1.5 1.5 0 0 0-.764-.7A485.065 485.065 0 0 0 404.081 32.03a1.816 1.816 0 0 0-1.923.91 337.461 337.461 0 0 0-14.9 30.6 447.848 447.848 0 0 0-134.426 0 309.541 309.541 0 0 0-15.135-30.6 1.89 1.89 0 0 0-1.924-.91 483.689 483.689 0 0 0-119.688 37.107 1.712 1.712 0 0 0-.788.676C39.068 183.651 18.186 294.69 28.43 404.354a2.016 2.016 0 0 0 .765 1.375 487.666 487.666 0 0 0 146.825 74.189 1.9 1.9 0 0 0 2.063-.676A348.2 348.2 0 0 0 208.12 430.4a1.86 1.86 0 0 0-1.019-2.588 321.173 321.173 0 0 1-45.868-21.853 1.885 1.885 0 0 1-.185-3.126 251.047 251.047 0 0 0 9.109-7.137 1.819 1.819 0 0 1 1.9-.256c96.229 43.917 200.41 43.917 295.5 0a1.812 1.812 0 0 1 1.924.233 234.533 234.533 0 0 0 9.132 7.16 1.884 1.884 0 0 1-.162 3.126 301.407 301.407 0 0 1-45.89 21.83 1.875 1.875 0 0 0-1 2.611 391.055 391.055 0 0 0 30.014 48.815 1.864 1.864 0 0 0 2.063.7A486.048 486.048 0 0 0 610.7 405.729a1.882 1.882 0 0 0 .765-1.352c12.264-126.783-20.532-236.912-86.934-334.541zM222.491 337.58c-28.972 0-52.844-26.587-52.844-59.239s23.409-59.241 52.844-59.241c29.665 0 53.306 26.82 52.843 59.239 0 32.654-23.41 59.241-52.843 59.241zm195.38 0c-28.971 0-52.843-26.587-52.843-59.239s23.409-59.241 52.843-59.241c29.667 0 53.307 26.82 52.844 59.239 0 32.654-23.177 59.241-52.844 59.241z"
                             />
                         </svg>
-                    )
-                }
+                    </div>}
+                </div>
             </div>
         </div>
     </body>
@@ -160,7 +164,7 @@ if (import.meta.env.PROD)
                 document.body.classList.toggle("theme-dark", theme !== "light");
                 break;
             case "setColors":
-                const { foregroundColor, backgroundColor } = data;
+                const { foregroundColor, backgroundColor, foregroundSecondary } = data;
 
                 if (hexColorRegex.test(foregroundColor))
                     document.body.style.setProperty(
@@ -172,6 +176,12 @@ if (import.meta.env.PROD)
                     document.body.style.setProperty(
                         "--background-color",
                         backgroundColor
+                    );
+
+                if (hexColorRegex.test(foregroundSecondary))
+                    document.body.style.setProperty(
+                        "--foreground-secondary",
+                        foregroundSecondary
                     );
 
                 break;
@@ -198,12 +208,14 @@ if (import.meta.env.PROD)
 
     .theme-dark {
         --background-color: #2b2d31;
-        --foreground-color: #f2f3f5;
+        --foreground-color: #dedede;
+        --foreground-secondary: #b5bac1;
     }
 
     .theme-light {
         --background-color: white;
         --foreground-color: #313338;
+        --foreground-secondary: #4e5058;
     }
 
     .root {
@@ -251,19 +263,28 @@ if (import.meta.env.PROD)
         z-index: 2;
     }
 
-    .profile {
+    .container {
+        align-items: start;
+        justify-content: space-between;
+        flex-direction: row;
+        display: flex;
+
         background: var(--background-color);
         color: var(--foreground-color);
 
-        position: relative;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
         border-bottom-left-radius: var(--border-radius);
         border-bottom-right-radius: var(--border-radius);
     }
 
-    .no-banner .profile {
+    .profile {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+        align-items: center;
+    }
+
+    .no-banner .container {
         border-radius: var(--border-radius);
     }
 
@@ -274,11 +295,11 @@ if (import.meta.env.PROD)
         margin: 12px;
     }
 
-    p {
+    p, span {
         font-family: "gg sans", system-ui, sans-serif;
         font-size: 20px;
         font-weight: 600;
-        line-height: 24px;
+        line-height: 1;
         text-rendering: optimizeLegibility;
     }
 
@@ -291,12 +312,23 @@ if (import.meta.env.PROD)
         filter: brightness(0.8);
     }
 
+    .flags {
+        margin-right: 10px;
+        margin-top: 10px;
+    }
+
     .flags img {
         width: 18px;
     }
 
     .username {
         margin: 8px 0;
+    }
+
+    .username.with-display-name {
+        color: var(--foreground-secondary);
+        font-size: 16px;
+        margin: 2px 0;
     }
 
     .userinfo {
